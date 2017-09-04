@@ -1,0 +1,30 @@
+name:                rule110
+version:             0.1.0.0
+homepage:            https://github.com/SamTay/rule110#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Sam Tay
+maintainer:          sam.chong.tay@gmail.com
+copyright:           2017 Sam Tay
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+executable rule110
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , bytestring
+                     , comonad
+                     , containers
+                     , random
+                     , reflex
+                     , reflex-dom
+                     , time
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/SamTay/rule110
