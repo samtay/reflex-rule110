@@ -26,8 +26,8 @@ main = do
     el "body" $
       divClass "center" $ do
         elClass "h2" "header" $ text "Rule 110"
-        rowsD <- reverse <$$> foldDynMaybe (const stepRow) [firstRow] tick
-        divClass "rows-container center" $
+        divClass "rows-container center" $ do
+          rowsD <- reverse <$$> foldDynMaybe (const stepRow) [firstRow] tick
           rowsWidget rowsD
 
 rowsWidget :: MonadWidget t m => Dynamic t [Row Bit] -> m ()

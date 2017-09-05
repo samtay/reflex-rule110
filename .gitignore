@@ -1,5 +1,8 @@
 src/Rule.hs
 
+hasktags
+reflex
+reflex-dom
 *.swp
 *.swo
 result
