@@ -4,7 +4,7 @@ This is a small working example of showing the
 [rule 110](https://en.wikipedia.org/wiki/Rule_110) computation via
 [reflex](https://github.com/reflex-frp/reflex), an FRP library.
 
-The interface can be seen at [samtay.github.io/reflex-rule110](samtay.github.io/reflex-rule110).
+The interface can be seen at [samtay.github.io/reflex-rule110](https://samtay.github.io/reflex-rule110).
 
 **Note**: I recently wrote a little Haskell implementation of rule 110 as an
 interview challenge problem and told the potential employer that I would not
