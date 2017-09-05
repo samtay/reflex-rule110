@@ -1,25 +1,24 @@
 code size summary per package:
 
-base:                    416790
-bytestring-0.10.8.1-5wktHSR60zC2wTr02OpyVU:7687
+base:                    370040
 comonad-5.0.1-8n6RTjhJ0GDHfpxqbtJfhT:339
-containers-0.5.7.1-9AY76Rzb1QLJmP8p4wSZRz:263958
+containers-0.5.7.1-9AY76Rzb1QLJmP8p4wSZRz:282496
 deepseq-1.4.2.0-47yvsc92PQF1rYmebWoAXZ:878
 dependent-map-0.2.4.0-FMGs6fxZ5iFxPmtfhjzSo:128339
 dependent-sum-0.4-Cnh2GGtTrZV1ucO6iZsIf7:12212
-ghc-prim:                22259
-ghcjs-base-0.2.0.0-D8NHjFR0nuJEBIdpJ8312j:2843
-ghcjs-dom-jsffi-0.9.0.0-6t2PrH1PMRWCZXxeL1bCrF:132541
+ghc-prim:                22475
+ghcjs-base-0.2.0.0-D8NHjFR0nuJEBIdpJ8312j:3771
+ghcjs-dom-jsffi-0.9.0.0-6t2PrH1PMRWCZXxeL1bCrF:138139
 ghcjs-prim-0.1.0.0-IFhsWclGfLr1HfhUvIVylA:10696
 integer-gmp:             81252
-main:                    82220
+main:                    107697
 prim-uniq-0.1.0.1-5EsWFk3cinw4b7fNSHLQLi:2777
 primitive-0.6.1.0-PBvNfnj6B81wEvI5CBk0H:809
 random-1.1-4yODkowlqmVH67qh6sFaKw:12266
 ref-tf-0.4.0.1-3hM7hnw7bOB1FwMAOCGwpN:1286
-reflex-0.5.0-9JN6p8PsE2CIffN8ub9VNa:1285723
-reflex-dom-core-0.4-FrR2RiQsxZF37EN3Rd8rsU:878759
-text-1.2.2.1-6Pphv4bz3hHEAngNHxPNZe:11739
+reflex-0.5.0-9JN6p8PsE2CIffN8ub9VNa:1288965
+reflex-dom-core-0.4-FrR2RiQsxZF37EN3Rd8rsU:894672
+text-1.2.2.1-6Pphv4bz3hHEAngNHxPNZe:3621
 these-0.7.3-GgBPgFa0vT8Leu3xTIoVqC:2969
 time-1.6.0.1-Lja9T8bqIudL0xdsRMOCyg:9455
 transformers-0.5.2.0-Lvs3wlJMkpyLRFNHJ8pmeB:11531
@@ -55,13 +54,13 @@ base
     Foreign.Storable:                   9306
     GHC.Base:                           10953
     GHC.Conc.Sync:                      6637
-    GHC.Enum:                           27098
+    GHC.Enum:                           13633
     GHC.Err:                            546
     GHC.Exception:                      17732
     GHC.Fingerprint:                    1960
     GHC.Fingerprint.Type:               724
     GHC.Foreign:                        12172
-    GHC.ForeignPtr:                     1679
+    GHC.ForeignPtr:                     1237
     GHC.IO:                             3504
     GHC.IO.Buffer:                      1241
     GHC.IO.BufferedIO:                  850
@@ -83,23 +82,19 @@ base
     GHC.MVar:                           174
     GHC.Num:                            3067
     GHC.Ptr:                            174
-    GHC.Real:                           23505
+    GHC.Real:                           15674
     GHC.STRef:                          620
-    GHC.Show:                           10670
+    GHC.Show:                           7290
     GHC.Stack.CCS:                      3971
     GHC.Stack.Types:                    1491
     GHC.Storable:                       1070
     GHC.TopHandler:                     11365
     GHC.Weak:                           174
-    GHC.Word:                           16856
-    Numeric:                            5098
+    GHC.Word:                           322
     System.CPUTime:                     1
     System.IO:                          622
     System.Posix.Internals:             16525
     Unsafe.Coerce:                      97
-
-bytestring-0.10.8.1-5wktHSR60zC2wTr02OpyVU
-    Data.ByteString.Internal:           7687
 
 comonad-5.0.1-8n6RTjhJ0GDHfpxqbtJfhT
     Control.Comonad:                    339
@@ -107,7 +102,7 @@ comonad-5.0.1-8n6RTjhJ0GDHfpxqbtJfhT
 containers-0.5.7.1-9AY76Rzb1QLJmP8p4wSZRz
     Data.IntMap.Base:                   24671
     Data.IntMap.Strict:                 10353
-    Data.Map.Base:                      96924
+    Data.Map.Base:                      115462
     Data.Map.Strict:                    12525
     Data.Sequence:                      119485
 
@@ -124,13 +119,14 @@ dependent-sum-0.4-Cnh2GGtTrZV1ucO6iZsIf7
     Data.Some:                          9315
 
 ghc-prim
-    GHC.CString:                        4500
-    GHC.Classes:                        12429
+    GHC.CString:                        4502
+    GHC.Classes:                        12643
     GHC.IntWord64:                      298
     GHC.Tuple:                          2617
     GHC.Types:                          2415
 
 ghcjs-base-0.2.0.0-D8NHjFR0nuJEBIdpJ8312j
+    Data.JSString:                      928
     Data.JSString.Internal.Type:        253
     GHCJS.Internal.Types:               242
     GHCJS.Marshal:                      989
@@ -148,7 +144,7 @@ ghcjs-dom-jsffi-0.9.0.0-6t2PrH1PMRWCZXxeL1bCrF
     GHCJS.DOM.JSFFI.Generated.GlobalEventHandlers:28338
     GHCJS.DOM.JSFFI.Generated.HTMLInputElement:703
     GHCJS.DOM.JSFFI.Generated.Node:     2536
-    GHCJS.DOM.Types:                    86012
+    GHCJS.DOM.Types:                    91610
 
 ghcjs-prim-0.1.0.0-IFhsWclGfLr1HfhUvIVylA
     GHCJS.Prim:                         7497
@@ -158,8 +154,8 @@ integer-gmp
     GHC.Integer.Type:                   81252
 
 main
-    Main:                               50154
-    Rule:                               32066
+    Main:                               75625
+    Rule:                               32072
 
 prim-uniq-0.1.0.1-5EsWFk3cinw4b7fNSHLQLi
     Unsafe.Unique.Prim:                 1053
@@ -177,7 +173,7 @@ ref-tf-0.4.0.1-3hM7hnw7bOB1FwMAOCGwpN
 reflex-0.5.0-9JN6p8PsE2CIffN8ub9VNa
     Data.Functor.Misc:                  17452
     Data.WeakBag:                       1556
-    Reflex.Class:                       65928
+    Reflex.Class:                       68742
     Reflex.Dynamic:                     5488
     Reflex.EventWriter:                 33759
     Reflex.Host.Class:                  3156
@@ -189,7 +185,7 @@ reflex-0.5.0-9JN6p8PsE2CIffN8ub9VNa
     Reflex.PerformEvent.Base:           59913
     Reflex.PerformEvent.Class:          4592
     Reflex.PostBuild.Base:              43741
-    Reflex.PostBuild.Class:             602
+    Reflex.PostBuild.Class:             1030
     Reflex.Requester.Base:              40177
     Reflex.Requester.Class:             3593
     Reflex.Spider.Internal:             926712
@@ -198,17 +194,15 @@ reflex-0.5.0-9JN6p8PsE2CIffN8ub9VNa
 
 reflex-dom-core-0.4-FrR2RiQsxZF37EN3Rd8rsU
     Foreign.JavaScript.TH:              36149
-    Reflex.Dom.Builder.Class:           16724
-    Reflex.Dom.Builder.Class.Events:    139054
+    Reflex.Dom.Builder.Class:           16905
+    Reflex.Dom.Builder.Class.Events:    139473
     Reflex.Dom.Builder.Immediate:       505453
-    Reflex.Dom.Main:                    46199
+    Reflex.Dom.Main:                    44603
     Reflex.Dom.Time:                    16938
-    Reflex.Dom.Widget.Basic:            118242
+    Reflex.Dom.Widget.Basic:            135151
 
 text-1.2.2.1-6Pphv4bz3hHEAngNHxPNZe
-    Data.Text.Array:                    437
-    Data.Text.Encoding:                 3608
-    Data.Text.Encoding.Error:           7571
+    Data.Text:                          3498
     Data.Text.Internal:                 123
 
 these-0.7.3-GgBPgFa0vT8Leu3xTIoVqC
@@ -229,5 +223,5 @@ unbounded-delays-0.1.1.0-B75u7eHHewD11aWYsBPEMt
 
 
 
-packed metadata: 702322
+packed metadata: 700624
 
