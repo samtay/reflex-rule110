@@ -5,20 +5,22 @@
 {-# LANGUAGE RecursiveDo           #-}
 module Main where
 
-import           Control.Monad          (guard, void, (<=<))
-import           Data.Foldable          (for_)
+import           Control.Monad   (guard, void, (<=<))
+import           Data.Foldable   (for_)
 
-import           Control.Monad.IO.Class (liftIO)
-import           Data.Text              (Text)
-import qualified Data.Text              as T
-import           Data.Time.Clock        (NominalDiffTime, getCurrentTime)
+import           Data.Text       (Text)
+import qualified Data.Text       as T
+import           Data.Time.Clock (NominalDiffTime, UTCTime, diffUTCTime,
+                                  getCurrentTime)
 import           Reflex.Dom
 
 import           Rule
 
 -- TODO
--- 1. Speed range
+-- 1. Style controls, pin to top of screen, bootstrap it or something
+-- 2. Maybe autoscroll so bottom is always visible
 -- 3. Click events delete rows underneath and repopulate ? Maybe?
+-- 4. Number input to control length of row...
 main :: IO ()
 main = do
   firstRow <- randomRow 80
@@ -30,13 +32,13 @@ main = do
         elClass "h2" "header" $ text "Rule 110"
         (play, delay') <- divClass "controls" $ do
           play <- playButton False
-          delay' <- delayRange 1
+          delay' <- delayRange initialDelay
           return (play, delay')
         divClass "rows-container center" $ do
-          tick' <- fmap (gate $ current play) -- Filter out ticks while paused
-                     . delayD delay'          -- Delay fastest tick by user supplied setting
+          let tick' = (gate $ current play)      -- Filter out ticks while paused
+                     . attachPromptlyDyn delay'  -- Tag event with delay info
                      $ tick
-          rowsD <- reverse <$$> foldDynMaybe (const stepRow) [firstRow] tick'
+          rowsD <- reverse . fmap fst <$$> foldDynMaybe stepRow [(firstRow, now)] tick'
           rowsWidget rowsD
 
 playButton :: (MonadWidget t m) => Bool -> m (Dynamic t Bool)
@@ -55,7 +57,7 @@ delayRange :: (MonadWidget t m) => NominalDiffTime -> m (Dynamic t NominalDiffTi
 delayRange initVal = do
   -- TODO dynamically change value from green to yellow or something
   r <- rangeInput $
-    def & rangeInputConfig_attributes .~ constDyn [("min", ".01"), ("max", "2.0"), ("step", "0.01")]
+    def & rangeInputConfig_attributes .~ constDyn [("min", ".04"), ("max", "2.0"), ("step", "0.01")]
         & rangeInputConfig_initialValue .~ toFloat initVal
   return $ fromFloat <$> value r
   where
@@ -68,10 +70,16 @@ rowsWidget rowsD =
   void $ simpleList rowsD
     (drawRow <=< sample . current)
 
-stepRow :: [Row Bit] -> Maybe [Row Bit]
-stepRow rs@(r:_) = do
-  guard . not $ ruleFinished r
-  return $ step r : rs
+stepRow
+  :: (NominalDiffTime, TickInfo)
+  -> [(Row Bit, UTCTime)]
+  -> Maybe [(Row Bit, UTCTime)]
+stepRow _ [] = Nothing -- this shouldn't happen
+stepRow (d, ti) rowInfos@((row, lastUpdate):_) = do
+  let tickTime = _tickInfo_lastUTC ti
+  guard $ (tickTime `diffUTCTime` lastUpdate) >= d -- Nothing if delay has not elapsed
+  guard . not $ ruleFinished row                   -- Nothing if computation finished
+  return $ (step row, tickTime) : rowInfos
 
 drawRow :: MonadWidget t m => Row Bit -> m ()
 drawRow r =
@@ -101,6 +109,7 @@ css =
              , ".center {margin: 0 auto; text-align: center;}"
              ]
 
+infixl 4 <$$>
 (<$$>) :: (Functor f, Functor g) => (a -> b) -> f (g a) -> f (g b)
 (<$$>) = fmap . fmap
 
@@ -108,3 +117,6 @@ delayD :: (MonadWidget t m) => Dynamic t NominalDiffTime -> Event t a -> m (Even
 delayD dynD e = do
   d <- sample . current $ dynD
   delay d e
+
+initialDelay :: NominalDiffTime
+initialDelay = 1
