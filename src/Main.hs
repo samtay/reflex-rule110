@@ -5,12 +5,13 @@
 {-# LANGUAGE RecursiveDo           #-}
 module Main where
 
-import           Control.Monad   (guard, void, (<=<))
-import           Data.Foldable   (for_)
+import           Control.Monad          (guard, void, (<=<))
+import           Data.Foldable          (for_)
 
-import           Data.Text       (Text)
-import qualified Data.Text       as T
-import           Data.Time.Clock (getCurrentTime)
+import           Control.Monad.IO.Class (liftIO)
+import           Data.Text              (Text)
+import qualified Data.Text              as T
+import           Data.Time.Clock        (NominalDiffTime, getCurrentTime)
 import           Reflex.Dom
 
 import           Rule
@@ -23,21 +24,24 @@ main = do
   firstRow <- randomRow 80
   now <- getCurrentTime
   mainWidgetWithHead headWidget $ do
-    tick <- tickLossy 0.05 now
+    tick <- tickLossy 0.01 now
     el "body" $
       divClass "center" $ do
         elClass "h2" "header" $ text "Rule 110"
-        (play) <- divClass "controls" $ do
+        (play, delay') <- divClass "controls" $ do
           play <- playButton False
-          return (play)
+          delay' <- delayRange 1
+          return (play, delay')
         divClass "rows-container center" $ do
-          let tick' = gate (current play) tick -- Filter out ticks while paused
+          tick' <- fmap (gate $ current play) -- Filter out ticks while paused
+                     . delayD delay'          -- Delay fastest tick by user supplied setting
+                     $ tick
           rowsD <- reverse <$$> foldDynMaybe (const stepRow) [firstRow] tick'
           rowsWidget rowsD
 
 playButton :: (MonadWidget t m) => Bool -> m (Dynamic t Bool)
-playButton initState = do
-  rec isOnD <- toggle initState btnE
+playButton initVal = do
+  rec isOnD <- toggle initVal btnE
       btnE <- do
         (e, _) <- element "button" def $ do
           let iconAttrs = ffor isOnD $ \case
@@ -46,6 +50,18 @@ playButton initState = do
           elDynAttr "i" iconAttrs blank
         return $ domEvent Click e
   return isOnD
+
+delayRange :: (MonadWidget t m) => NominalDiffTime -> m (Dynamic t NominalDiffTime)
+delayRange initVal = do
+  -- TODO dynamically change value from green to yellow or something
+  r <- rangeInput $
+    def & rangeInputConfig_attributes .~ constDyn [("min", ".01"), ("max", "2.0"), ("step", "0.01")]
+        & rangeInputConfig_initialValue .~ toFloat initVal
+  return $ fromFloat <$> value r
+  where
+    toFloat = realToFrac
+    fromFloat = realToFrac
+
 
 rowsWidget :: MonadWidget t m => Dynamic t [Row Bit] -> m ()
 rowsWidget rowsD =
@@ -87,3 +103,8 @@ css =
 
 (<$$>) :: (Functor f, Functor g) => (a -> b) -> f (g a) -> f (g b)
 (<$$>) = fmap . fmap
+
+delayD :: (MonadWidget t m) => Dynamic t NominalDiffTime -> Event t a -> m (Event t a)
+delayD dynD e = do
+  d <- sample . current $ dynD
+  delay d e
