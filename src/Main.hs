@@ -32,8 +32,9 @@ main = do
         elClass "h2" "header" $ text "Rule 110"
         (play, delay') <- divClass "controls" $ do
           play <- playButton False
-          delay' <- delayRange initialDelay
+          delay' <- delayRange
           return (play, delay')
+        el "hr" blank
         divClass "rows-container center" $ do
           let tick' = (gate $ current play)      -- Filter out ticks while paused
                      . attachPromptlyDyn delay'  -- Tag event with delay info
@@ -42,28 +43,30 @@ main = do
           rowsWidget rowsD
 
 playButton :: (MonadWidget t m) => Bool -> m (Dynamic t Bool)
-playButton initVal = do
+playButton initVal = divClass "control" $ do
   rec isOnD <- toggle initVal btnE
       btnE <- do
-        (e, _) <- element "button" def $ do
+        (e, _) <- element "button" defBtn $ do
           let iconAttrs = ffor isOnD $ \case
                 True -> "class" =: "fa fa-pause"
                 False -> "class" =: "fa fa-play"
           elDynAttr "i" iconAttrs blank
         return $ domEvent Click e
   return isOnD
+  where
+    defBtn = def & elementConfig_initialAttributes .~ "class" =: "btn"
 
-delayRange :: (MonadWidget t m) => NominalDiffTime -> m (Dynamic t NominalDiffTime)
-delayRange initVal = do
+delayRange :: (MonadWidget t m) => m (Dynamic t NominalDiffTime)
+delayRange = divClass "control range-container" $ do
   -- TODO dynamically change value from green to yellow or something
+  el "label" $ text "Speed"
   r <- rangeInput $
     def & rangeInputConfig_attributes .~ constDyn [("min", ".04"), ("max", "2.0"), ("step", "0.01")]
-        & rangeInputConfig_initialValue .~ toFloat initVal
-  return $ fromFloat <$> value r
+        & rangeInputConfig_initialValue .~ toFloat 1
+  return $ (2.04 -) . fromFloat <$> value r
   where
     toFloat = realToFrac
     fromFloat = realToFrac
-
 
 rowsWidget :: MonadWidget t m => Dynamic t [Row Bit] -> m ()
 rowsWidget rowsD =
@@ -93,6 +96,7 @@ headWidget = do
   el "style" $ text css
   elAttr "meta" [("http-equiv", "Content-type"), ("content", "text/html; charset=UTF-8")] blank
   styleSheet "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+  styleSheet "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
   where
     styleSheet href = elAttr "link" [("rel", "stylesheet"), ("type", "text/css"), ("href", href)] blank
 
@@ -105,18 +109,12 @@ css =
              , ".rows-container {display: flex; flex-direction: column;}"
              , ".text-center {margin: 0 auto;}"
              , ".header {padding: 10px;}"
-             , ".controls {padding: 10px;}"
+             , ".controls {padding: 10px; display: flex; flex-direction: row; justify-content: center;}"
+             , ".control {padding: 8px;}"
+             , ".range-container {margin-top: -12px;}"
              , ".center {margin: 0 auto; text-align: center;}"
              ]
 
 infixl 4 <$$>
 (<$$>) :: (Functor f, Functor g) => (a -> b) -> f (g a) -> f (g b)
 (<$$>) = fmap . fmap
-
-delayD :: (MonadWidget t m) => Dynamic t NominalDiffTime -> Event t a -> m (Event t a)
-delayD dynD e = do
-  d <- sample . current $ dynD
-  delay d e
-
-initialDelay :: NominalDiffTime
-initialDelay = 1
