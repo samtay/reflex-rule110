@@ -8,6 +8,7 @@ module Main where
 import           Control.Monad   (guard, void, (<=<))
 import           Data.Foldable   (for_)
 
+import           Data.Map        (Map)
 import           Data.Text       (Text)
 import qualified Data.Text       as T
 import           Data.Time.Clock (NominalDiffTime, UTCTime, diffUTCTime,
@@ -39,8 +40,38 @@ main = do
           let tick' = (gate $ current play)      -- Filter out ticks while paused
                      . attachPromptlyDyn delay'  -- Tag event with delay info
                      $ tick
-          rowsD <- reverse . fmap fst <$$> foldDynMaybe stepRow [(firstRow, now)] tick'
-          rowsWidget rowsD
+          row <- foldDynMaybe stepRow (firstRow, 0, now) tick'
+          let (rowMap, rowTotal) = splitDynPure . ffor row $ \(r, i, _) -> (i =: Just r, i + 1)
+          void $ rowsWidget rowTotal (updated rowMap)
+
+rowsWidget :: MonadWidget t m
+  => Dynamic t Int -- ^ A 'Dynamic' of the total number of items
+  -> Event t (Map Int (Maybe (Row Bit))) -- ^ The update 'Event'.
+  -> m (Dynamic t (Int, Int), Dynamic t (Map Int (Row Bit)))
+  -- ^ A tuple containing: a 'Dynamic' of the (based on the current scroll position)
+  -- and number of items currently being rendered, and the 'Dynamic' list result
+rowsWidget rowTotal newRow = do
+  -- TODO possibly add button to toggle auto scroll, then gate the below index evt
+  let lastIndex = subtract 1 <$> updated rowTotal
+  virtualList (constDyn 500) 10 rowTotal 1 lastIndex id mempty newRow $ \_ v _ -> drawRow v
+
+stepRow
+  :: (NominalDiffTime, TickInfo)
+  -> (Row Bit, Int, UTCTime)
+  -> Maybe (Row Bit, Int, UTCTime)
+stepRow (d, ti) (row, ix, lastUpdate) = do
+  let tickTime = _tickInfo_lastUTC ti
+  guard $ (tickTime `diffUTCTime` lastUpdate) >= d -- Nothing if delay has not elapsed
+  guard . not $ ruleFinished row                   -- Nothing if computation finished
+  return $ (step row, ix + 1, tickTime)
+
+drawRow :: MonadWidget t m => Row Bit -> m (Row Bit)
+drawRow r = do
+  divClass "row-container" $
+    for_ r $ \case
+      Zero -> divClass "zero cell" $ blank
+      One  -> divClass "one cell"  $ blank
+  return r
 
 playButton :: (MonadWidget t m) => Bool -> m (Dynamic t Bool)
 playButton initVal = divClass "control" $ do
@@ -68,29 +99,6 @@ delayRange = divClass "control range-container" $ do
     toFloat = realToFrac
     fromFloat = realToFrac
 
-rowsWidget :: MonadWidget t m => Dynamic t [Row Bit] -> m ()
-rowsWidget rowsD =
-  void $ simpleList rowsD
-    (drawRow <=< sample . current)
-
-stepRow
-  :: (NominalDiffTime, TickInfo)
-  -> [(Row Bit, UTCTime)]
-  -> Maybe [(Row Bit, UTCTime)]
-stepRow _ [] = Nothing -- this shouldn't happen
-stepRow (d, ti) rowInfos@((row, lastUpdate):_) = do
-  let tickTime = _tickInfo_lastUTC ti
-  guard $ (tickTime `diffUTCTime` lastUpdate) >= d -- Nothing if delay has not elapsed
-  guard . not $ ruleFinished row                   -- Nothing if computation finished
-  return $ (step row, tickTime) : rowInfos
-
-drawRow :: MonadWidget t m => Row Bit -> m ()
-drawRow r =
-  divClass "row-container" $
-    for_ r $ \case
-      Zero -> divClass "zero cell" $ blank
-      One  -> divClass "one cell"  $ blank
-
 headWidget :: MonadWidget t m => m ()
 headWidget = do
   el "style" $ text css
@@ -114,7 +122,3 @@ css =
              , ".range-container {margin-top: -12px;}"
              , ".center {margin: 0 auto; text-align: center;}"
              ]
-
-infixl 4 <$$>
-(<$$>) :: (Functor f, Functor g) => (a -> b) -> f (g a) -> f (g b)
-(<$$>) = fmap . fmap
