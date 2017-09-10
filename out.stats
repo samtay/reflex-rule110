@@ -1,24 +1,24 @@
 code size summary per package:
 
-base:                    580851
+base:                    593070
 comonad-5.0.1-8n6RTjhJ0GDHfpxqbtJfhT:339
-containers-0.5.7.1-9AY76Rzb1QLJmP8p4wSZRz:284097
+containers-0.5.7.1-9AY76Rzb1QLJmP8p4wSZRz:293406
 deepseq-1.4.2.0-47yvsc92PQF1rYmebWoAXZ:884
 dependent-map-0.2.4.0-FMGs6fxZ5iFxPmtfhjzSo:128339
 dependent-sum-0.4-Cnh2GGtTrZV1ucO6iZsIf7:12212
-ghc-prim:                24794
-ghcjs-base-0.2.0.0-D8NHjFR0nuJEBIdpJ8312j:3771
+ghc-prim:                25327
+ghcjs-base-0.2.0.0-D8NHjFR0nuJEBIdpJ8312j:6174
 ghcjs-dom-jsffi-0.9.0.0-6t2PrH1PMRWCZXxeL1bCrF:138139
 ghcjs-prim-0.1.0.0-IFhsWclGfLr1HfhUvIVylA:10696
 integer-gmp:             85922
-main:                    126284
+main:                    130254
 prim-uniq-0.1.0.1-5EsWFk3cinw4b7fNSHLQLi:2777
 primitive-0.6.1.0-PBvNfnj6B81wEvI5CBk0H:809
 random-1.1-4yODkowlqmVH67qh6sFaKw:12379
 ref-tf-0.4.0.1-3hM7hnw7bOB1FwMAOCGwpN:1286
-reflex-0.5.0-9JN6p8PsE2CIffN8ub9VNa:1292041
-reflex-dom-core-0.4-FrR2RiQsxZF37EN3Rd8rsU:915519
-text-1.2.2.1-6Pphv4bz3hHEAngNHxPNZe:3647
+reflex-0.5.0-9JN6p8PsE2CIffN8ub9VNa:1296518
+reflex-dom-core-0.4-FrR2RiQsxZF37EN3Rd8rsU:1337655
+text-1.2.2.1-6Pphv4bz3hHEAngNHxPNZe:3774
 these-0.7.3-GgBPgFa0vT8Leu3xTIoVqC:2985
 time-1.6.0.1-Lja9T8bqIudL0xdsRMOCyg:9515
 transformers-0.5.2.0-Lvs3wlJMkpyLRFNHJ8pmeB:11531
@@ -56,13 +56,14 @@ base
     GHC.Base:                           10953
     GHC.Char:                           705
     GHC.Conc.Sync:                      6637
-    GHC.Enum:                           13633
+    GHC.Enum:                           21097
     GHC.Err:                            546
     GHC.Exception:                      17732
     GHC.Fingerprint:                    1960
     GHC.Fingerprint.Type:               724
     GHC.Float:                          72811
     GHC.Float.ConversionUtils:          2721
+    GHC.Float.RealFracMethods:          228
     GHC.Foreign:                        12172
     GHC.ForeignPtr:                     1237
     GHC.IO:                             3504
@@ -82,12 +83,12 @@ base
     GHC.IO.Unsafe:                      370
     GHC.IORef:                          159
     GHC.Int:                            3173
-    GHC.List:                           12809
+    GHC.List:                           9877
     GHC.MVar:                           174
     GHC.Num:                            3067
     GHC.Ptr:                            174
     GHC.Read:                           8289
-    GHC.Real:                           22386
+    GHC.Real:                           29845
     GHC.STRef:                          620
     GHC.Show:                           10488
     GHC.Stack.CCS:                      3971
@@ -112,7 +113,7 @@ comonad-5.0.1-8n6RTjhJ0GDHfpxqbtJfhT
 containers-0.5.7.1-9AY76Rzb1QLJmP8p4wSZRz
     Data.IntMap.Base:                   24825
     Data.IntMap.Strict:                 10379
-    Data.Map.Base:                      116128
+    Data.Map.Base:                      125437
     Data.Map.Strict:                    12589
     Data.Sequence:                      120176
 
@@ -130,14 +131,15 @@ dependent-sum-0.4-Cnh2GGtTrZV1ucO6iZsIf7
 
 ghc-prim
     GHC.CString:                        4516
-    GHC.Classes:                        14801
+    GHC.Classes:                        15334
     GHC.IntWord64:                      298
     GHC.Tuple:                          2617
     GHC.Types:                          2562
 
 ghcjs-base-0.2.0.0-D8NHjFR0nuJEBIdpJ8312j
-    Data.JSString:                      928
-    Data.JSString.Internal.Type:        253
+    Data.JSString:                      1572
+    Data.JSString.Internal.Fusion.Common:1492
+    Data.JSString.Internal.Type:        520
     GHCJS.Internal.Types:               242
     GHCJS.Marshal:                      989
     GHCJS.Marshal.Internal:             1359
@@ -164,7 +166,7 @@ integer-gmp
     GHC.Integer.Type:                   85922
 
 main
-    Main:                               94212
+    Main:                               98182
     Rule:                               32072
 
 prim-uniq-0.1.0.1-5EsWFk3cinw4b7fNSHLQLi
@@ -183,7 +185,7 @@ ref-tf-0.4.0.1-3hM7hnw7bOB1FwMAOCGwpN
 reflex-0.5.0-9JN6p8PsE2CIffN8ub9VNa
     Data.Functor.Misc:                  17452
     Data.WeakBag:                       1556
-    Reflex.Class:                       68950
+    Reflex.Class:                       73427
     Reflex.Dynamic:                     8356
     Reflex.EventWriter:                 33759
     Reflex.Host.Class:                  3156
@@ -205,15 +207,16 @@ reflex-0.5.0-9JN6p8PsE2CIffN8ub9VNa
 reflex-dom-core-0.4-FrR2RiQsxZF37EN3Rd8rsU
     Foreign.JavaScript.TH:              36149
     Reflex.Dom.Builder.Class:           17860
-    Reflex.Dom.Builder.Class.Events:    139898
+    Reflex.Dom.Builder.Class.Events:    140320
     Reflex.Dom.Builder.Immediate:       505453
     Reflex.Dom.Main:                    44603
     Reflex.Dom.Time:                    16938
-    Reflex.Dom.Widget.Basic:            135213
+    Reflex.Dom.Widget.Basic:            110665
     Reflex.Dom.Widget.Input:            19405
+    Reflex.Dom.Widget.Lazy:             446262
 
 text-1.2.2.1-6Pphv4bz3hHEAngNHxPNZe
-    Data.Text:                          3524
+    Data.Text:                          3651
     Data.Text.Internal:                 123
 
 these-0.7.3-GgBPgFa0vT8Leu3xTIoVqC
@@ -234,5 +237,5 @@ unbounded-delays-0.1.1.0-B75u7eHHewD11aWYsBPEMt
 
 
 
-packed metadata: 743701
+packed metadata: 769789
 
