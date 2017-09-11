@@ -18,10 +18,7 @@ import           Reflex.Dom
 import           Rule
 
 -- TODO
--- 1. Style controls, pin to top of screen, bootstrap it or something
--- 2. Maybe autoscroll so bottom is always visible
--- 3. Click events delete rows underneath and repopulate ? Maybe?
--- 4. Number input to control length of row...
+-- 1. Click events delete rows underneath and repopulate ? Maybe?
 main :: IO ()
 main = do
   firstRow <- randomRow 80
@@ -51,7 +48,6 @@ rowsWidget :: MonadWidget t m
   -- ^ A tuple containing: a 'Dynamic' of the (based on the current scroll position)
   -- and number of items currently being rendered, and the 'Dynamic' list result
 rowsWidget rowTotal newRow = do
-  -- TODO possibly add button to toggle auto scroll, then gate the below index evt
   let lastIndex = subtract 1 <$> updated rowTotal
   virtualList (constDyn 500) 10 rowTotal 1 lastIndex id mempty newRow $ \_ v _ -> drawRow v
 
@@ -89,7 +85,6 @@ playButton initVal = divClass "control" $ do
 
 delayRange :: (MonadWidget t m) => m (Dynamic t NominalDiffTime)
 delayRange = divClass "control range-container" $ do
-  -- TODO dynamically change value from green to yellow or something
   el "label" $ text "Speed"
   r <- rangeInput $
     def & rangeInputConfig_attributes .~ constDyn [("min", ".04"), ("max", "2.0"), ("step", "0.01")]
