@@ -33,9 +33,9 @@ play with. Then:
 xdg-open dist/build/rule110/rule110.jsexe/index.html
 
 # build via ghc to native webkitgtk
-./build ghc
+./build --ghc
 ./dist/build/rule110/rule110
 
 # enter nix-shell for either environment
-./build -s [ghc|ghcjs]
+./build -s [--ghc|--ghcjs]
 ```

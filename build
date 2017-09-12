@@ -9,22 +9,28 @@ util/help() {
 
   Build utility
 
-  Usage: build [options] [ghc|ghcjs]
+  Usage: build [OPTIONS]
 
          # build via ghcjs (default compiler)
          build
 
          # build via ghc
-         build ghc
+         build --ghc
 
          # enter a nix-shell with ghc compiler
-         build -s ghc
+         build -s --ghc
 
+         # build and push output to gh-pages branch
+         build --push
 
   Options:
     --help               Display help
 
     -s | --shell-only    Enter nix-shell
+
+    --ghc | --ghcjs      Specify compiler (default: ghcjs)
+
+    --push               Build via ghcjs and push output to gh-pages
 
 EOF
   exit $1
@@ -33,6 +39,10 @@ EOF
 util/error(){
   printf "\033[31m%s\n\033[0m" "$@" >&2
   exit 1
+}
+
+util/info(){
+  printf "\033[1;36m%s\n\033[0m" "$@" >&2
 }
 
 ###################
@@ -55,10 +65,33 @@ build/nix_shell() {
   fi
 }
 
+build/push_to_github() {
+    util/info "Building via ghcjs..."
+    ( COMPILER="ghcjs" RUN=true build/nix_shell )
+
+    util/info "Cloning gh-pages into tempdir..."
+    tmpdir=$(mktemp -d)
+    git clone --single-branch --branch gh-pages \
+        git@github.com:samtay/reflex-rule110.git \
+        $tmpdir
+
+    util/info "Pushing last build to gh-pages branch..."
+    cp -R dist/build/rule110/rule110.jsexe/* $tmpdir
+    cd $tmpdir
+    git add .
+    git commit -m 'Update ghcjs build output' || {
+      util/error "No changes to deploy"
+    }
+    git push
+
+    util/info "Done!"
+}
+
 main(){
   set -eo pipefail
 
   # defaults
+  local operand="build/nix_shell" 
   COMPILER="ghcjs"
   RUN=true
   CACHE_OPTS="--option extra-binary-caches https://nixcache.reflex-frp.org --option extra-binary-caches https://ryantrinkle.com:5443 -j 8"
@@ -67,13 +100,15 @@ main(){
     case $1 in
       -h|--help|help)    util/help ;;
       -s|--shell-only)   RUN=false ;;
-      ghc|ghcjs)         COMPILER=$1 ;;
+      --ghc)             COMPILER="ghc" ;;
+      --ghcjs)           COMPILER="ghcjs" ;;
+      --push)            operand="build/push_to_github" ;;
       *)                 util/error "invalid argument: $1"
     esac
     shift
   done
 
-  build/nix_shell
+  $operand
 }
 
 main "$@"
