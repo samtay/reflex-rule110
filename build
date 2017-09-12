@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+###################
+# Utils
+###################
+
+util/help() {
+  cat <<-EOF
+
+  Build utility
+
+  Usage: build [options] [ghc|ghcjs]
+
+         # build via ghcjs (default compiler)
+         build
+
+         # build via ghc
+         build ghc
+
+         # enter a nix-shell with ghc compiler
+         build -s ghc
+
+
+  Options:
+    --help               Display help
+
+    -s | --shell-only    Enter nix-shell
+
+EOF
+  exit $1
+}
+
+util/error(){
+  printf "\033[31m%s\n\033[0m" "$@" >&2
+  exit 1
+}
+
+###################
+# Runtime funcs
+###################
+
+build/get_run_opts() {
+  case "$COMPILER" in
+    ghc) echo "cabal configure && cabal build" ;;
+    ghcjs) echo "cabal configure --ghcjs && cabal build" ;;
+    *) util/error "Invalid compiler: $COMPILER" ;;
+  esac
+}
+
+build/nix_shell() {
+  if $RUN; then
+    nix-shell --argstr compiler "$COMPILER" --run "$(build/get_run_opts)"
+  else
+    nix-shell --argstr compiler "$COMPILER"
+  fi
+}
+
+main(){
+  set -eo pipefail
+
+  # defaults
+  COMPILER="ghcjs"
+  RUN=true
+  CACHE_OPTS="--option extra-binary-caches https://nixcache.reflex-frp.org --option extra-binary-caches https://ryantrinkle.com:5443 -j 8"
+
+  while [ $# -ne 0 ]; do
+    case $1 in
+      -h|--help|help)    util/help ;;
+      -s|--shell-only)   RUN=false ;;
+      ghc|ghcjs)         COMPILER=$1 ;;
+      *)                 util/error "invalid argument: $1"
+    esac
+    shift
+  done
+
+  build/nix_shell
+}
+
+main "$@"
