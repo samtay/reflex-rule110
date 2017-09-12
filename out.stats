@@ -11,7 +11,7 @@ ghcjs-base-0.2.0.0-D8NHjFR0nuJEBIdpJ8312j:6174
 ghcjs-dom-jsffi-0.9.0.0-6t2PrH1PMRWCZXxeL1bCrF:138139
 ghcjs-prim-0.1.0.0-IFhsWclGfLr1HfhUvIVylA:10696
 integer-gmp:             85922
-main:                    130254
+main:                    129998
 prim-uniq-0.1.0.1-5EsWFk3cinw4b7fNSHLQLi:2777
 primitive-0.6.1.0-PBvNfnj6B81wEvI5CBk0H:809
 random-1.1-4yODkowlqmVH67qh6sFaKw:12379
@@ -166,7 +166,7 @@ integer-gmp
     GHC.Integer.Type:                   85922
 
 main
-    Main:                               98182
+    Main:                               97926
     Rule:                               32072
 
 prim-uniq-0.1.0.1-5EsWFk3cinw4b7fNSHLQLi
@@ -237,5 +237,5 @@ unbounded-delays-0.1.1.0-B75u7eHHewD11aWYsBPEMt
 
 
 
-packed metadata: 769789
+packed metadata: 769731
 
